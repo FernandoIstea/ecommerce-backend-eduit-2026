@@ -35,7 +35,7 @@ app.post('/products', createProduct)
 app.put('/products/:id', updateProduct)
 app.delete('/products/:id', softDeleteProduct)
 
-app.use((req, res) =>   res.status(404).json({ errorMessage: 'Endpoint no encontrado' }) )
+app.use((req, res) =>   res.status(404).json({ errorMessage: `The Endpoint ${req.url} does not exist.` }) )
 
 // --- Server Start ---
 app.listen(PORT, () => {
