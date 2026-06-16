@@ -1,0 +1,58 @@
+[
+	{
+        "nombre": "laptops",
+        "owner": "36b0ead4afc542f0952b524b3984431c"
+    },
+    {
+        "nombre": "smartphones",
+        "owner": "36b0ead4afc542f0952b524b3984431c"
+    },
+    {
+        "nombre": "monitores",
+        "owner": "36b0ead4afc542f0952b524b3984431c"
+    },
+    {
+        "nombre": "accesorios",
+        "owner": "36b0ead4afc542f0952b524b3984431c"
+    },
+    {
+        "nombre": "oficina",
+        "owner": "36b0ead4afc542f0952b524b3984431c"
+    },
+    {
+        "nombre": "fotografía",
+        "owner": "36b0ead4afc542f0952b524b3984431c"
+    },
+    {
+        "nombre": "audio",
+        "owner": "36b0ead4afc542f0952b524b3984431c"
+    },
+    {
+        "nombre": "gaming",
+        "owner": "36b0ead4afc542f0952b524b3984431c"
+    },
+    {
+        "nombre": "wearables",
+        "owner": "36b0ead4afc542f0952b524b3984431c"
+    },
+    {
+        "nombre": "smart-home",
+        "owner": "36b0ead4afc542f0952b524b3984431c"
+    },
+    {
+        "nombre": "almacenamiento",
+        "owner": "36b0ead4afc542f0952b524b3984431c"
+    },
+    {
+        "nombre": "redes",
+        "owner": "36b0ead4afc542f0952b524b3984431c"
+    },
+    {
+        "nombre": "componentes",
+        "owner": "36b0ead4afc542f0952b524b3984431c"
+    },
+    {
+        "nombre": "televisión",
+        "owner": "36b0ead4afc542f0952b524b3984431c"
+    }
+]

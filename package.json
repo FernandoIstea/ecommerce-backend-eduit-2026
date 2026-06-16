@@ -1,0 +1,25 @@
+{
+  "name": "backend-ecommerce",
+  "version": "1.0.2026",
+  "description": "Aplicación de backend para productos",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --env-file=.env --watch index.js",
+    "prod": "node --evn-file=.env index.js"
+  },
+  "keywords": [
+    "app",
+    "backend",
+    "nodejs",
+    "express",
+    "mongodb",
+    "Educación IT"
+  ],
+  "author": "Fernando Luna para Educación IT.",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "express": "^5.2.1",
+    "mongodb": "^7.3.0"
+  }
+}
