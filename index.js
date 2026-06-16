@@ -35,10 +35,7 @@ app.post('/products', createProduct)
 app.put('/products/:id', updateProduct)
 app.delete('/products/:id', softDeleteProduct)
 
-app.use((req, res, next) => {
-    console.log(`The route ${req.url} does not exists.`)
-    next()
-})
+app.use((req, res) =>   res.status(404).json({ errorMessage: 'Endpoint no encontrado' }) )
 
 // --- Server Start ---
 app.listen(PORT, () => {
