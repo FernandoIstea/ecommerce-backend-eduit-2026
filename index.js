@@ -35,6 +35,11 @@ app.post('/products', createProduct)
 app.put('/products/:id', updateProduct)
 app.delete('/products/:id', softDeleteProduct)
 
+app.use((req, res, next) => {
+    console.log(`The route ${req.url} does not exists.`)
+    next()
+})
+
 // --- Server Start ---
 app.listen(PORT, () => {
     console.clear()
