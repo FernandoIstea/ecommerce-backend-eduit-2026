@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 3000
 app.use(express.json())
 // --- Routes ---
 app.get('/', (req, res)=> res.redirect('/hello-world') )
-app.get('/hello-world', )
+app.get('/hello-world', helloWorld)
 // ADMIN
 app.post('/create-admin-profile', createAdminProfile)
 app.get('/recover-profile', recoverProfile)
