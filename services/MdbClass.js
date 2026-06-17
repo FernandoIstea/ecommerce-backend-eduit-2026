@@ -165,7 +165,7 @@ export class MdbClass {
         }
     }
 
-    static async getCategories(userId) {
+    static async getCategories(owner) {
         if (!this.client) {
             return { status: 'Error', errorMessage: 'Database client not initialized. Call MdbClass.connect() first.' }
         }
@@ -175,7 +175,7 @@ export class MdbClass {
         try {
             const db = this.client.db(dbName)
             const categoriesCollection = db.collection(collectionName)
-            const queryFilter = { owner: userId }
+            const queryFilter = { owner: owner }
 
             const categoriesCursor = await categoriesCollection.find(queryFilter)
             const categoriesArray = await categoriesCursor.toArray()
@@ -200,7 +200,7 @@ export class MdbClass {
         }
     }
 
-    static async getProducts(userId) {
+    static async getProducts(owner) {
         if (!this.client) {
             return { status: 'Error', errorMessage: 'Database client not initialized. Call MdbClass.connect() first.' }
         }
@@ -211,7 +211,7 @@ export class MdbClass {
         try {
             const db = this.client.db(dbName)
             const productsCollection = db.collection(collectionName)
-            const queryFilter = { owner: userId, deleted: { $exists: false } }
+            const queryFilter = { owner: owner, deleted: { $exists: false } }
             // PRIMERA OPCION FUNCIONANDO: const queryFilter = { owner: userId }
             // OTRA OPCION POR SI NO FUNCIONA LA ACTUAL: deleted: { $ne: true }
 
@@ -277,6 +277,59 @@ export class MdbClass {
                      data: productFound
             }
 
+        } catch (error) {
+            return { 
+                status: 'Error',
+                message: `Database query failed: ${error.message}` 
+            }
+        }
+    }
+
+    static async filterProductsByName(name, owner) {
+        console.log('Se invocó filterProductsByName')
+        if (!this.client) {
+            return { status: 'Error', 
+                     errorMessage: 'Database client not initialized. Call MdbClass.connect() first.' 
+                   }
+        }
+
+        if (!name) {
+            throw new Error(`You must inform a valida name to filter products.`)
+        }
+
+        const escapeRegExp = (string)=> string.replaceAll(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+        const dbName = process.env.MONGO_DB_NAME
+        const collectionName = 'products'
+
+        try {
+            const db = this.client.db(dbName)
+            const productsCollection = db.collection(collectionName)
+            const regexPattern = new RegExp(escapeRegExp(name), 'i')
+
+            const queryFilter = { nombre: regexPattern, owner: owner, deleted: { $ne: true } }
+            const productDocuments = await productsCollection.find(queryFilter)
+                                                             .toArray()
+
+            if (productDocuments.length > 0) {
+                const filteredProducts = productDocuments.map((prod)=> {
+                    return {
+                               id: prod._id.toString(),
+                               nombre: prod.nombre,
+                               imagen: prod.imagen,
+                               precio: prod.precio,
+                               categoria: prod.categoria
+                           }
+                })
+
+                return { status: 'Ok',
+                         data: filteredProducts
+                       }
+            } else {
+                return { status: 'Error', 
+                        messageError: `We cannot find Products with name: '${name}'.`
+                    }
+            } 
         } catch (error) {
             return { 
                 status: 'Error',

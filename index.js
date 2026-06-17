@@ -14,6 +14,7 @@ import { createProduct } from './controllers/createproduct-controller.js'
 import { updateProduct } from './controllers/updateproduct-controller.js'
 import { softDeleteProduct } from './controllers/softdeleteproduct-controller.js'
 import { getProductById } from './controllers/getproductbyid-controller.js'
+import { filterProductsByName } from './controllers/filterproductsbyname-controller.js'
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -31,11 +32,12 @@ app.post('/categories', createCategory)
 // PRODUCTS
 app.get('/products', getProducts)
 app.get('/products/:id', getProductById)
+app.get('/products/name/:name', filterProductsByName)
 app.post('/products', createProduct)
 app.put('/products/:id', updateProduct)
 app.delete('/products/:id', softDeleteProduct)
 
-app.use((req, res) =>   res.status(404).json({ errorMessage: `The Endpoint ${req.url} does not exist.` }) )
+app.use((req, res) =>   res.status(404).json({ errorMessage: `Endpoint '${req.url}' no encontrado.` }) )
 
 // --- Server Start ---
 app.listen(PORT, () => {
@@ -43,6 +45,6 @@ app.listen(PORT, () => {
     console.log(`========================================================`)
     console.log(`🚀 Server running successfully!`)
     console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`)
-    console.log(`🔗 API Endpoints available on ${process.env.RENDER_EXTERNAL_URL}  || 'localhost':${PORT}`)
+    console.log(`🔗 API Endpoints available on http://localhost:${PORT}`)
     console.log(`========================================================`)
 })

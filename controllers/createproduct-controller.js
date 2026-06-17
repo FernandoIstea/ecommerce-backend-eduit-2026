@@ -32,11 +32,11 @@ export const createProduct = async (req, res) => {
 
     try {
         if (!result.valid) {
-            throw new Error('Inform a valid token to continue.')
+            throw new Error('You must inform a valid token to continue.')
         }
 
         uid = result.data.userId
-
+        
         const newProduct = {
             nombre: nombre,
             imagen: imagen,
@@ -45,8 +45,6 @@ export const createProduct = async (req, res) => {
             owner: uid
         }
 
-        // return res.json(newProduct)
-
         await MdbClass.connect(process.env.MONGO_DB_CONNECTION)
         const productCreated = await MdbClass.createProduct(newProduct)
 
@@ -54,7 +52,6 @@ export const createProduct = async (req, res) => {
             newProduct.id = productCreated.newId.toString()
             delete newProduct._id
 
-            console.table(newProduct)
             return res.status(201).json({ success: true, 
                                           data: newProduct 
                                         })
