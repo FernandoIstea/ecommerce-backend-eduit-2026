@@ -259,7 +259,8 @@ export class MdbClass {
         try {
             const db = this.client.db(dbName)
             const productsCollection = db.collection(collectionName)
-            const queryFilter = { _id: new ObjectId(id), owner: owner }
+            // const queryFilter = { _id: new ObjectId(id), owner: owner }
+            const queryFilter = { _id: new ObjectId(id), owner: owner, deleted: { $ne: true } }
             const productDocument = await productsCollection.findOne(queryFilter)
 
             if (!productDocument?._id) {
