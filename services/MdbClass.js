@@ -248,9 +248,6 @@ export class MdbClass {
 
         if (!this.isValidObjectId(id)) {
             throw new Error(`Invalid ID: ${id}.`)
-            // return { status: 'Error', 
-            //          messageError: `Invalid ID: ${id}`
-            // }
         }
 
         const dbName = process.env.MONGO_DB_NAME
@@ -259,7 +256,6 @@ export class MdbClass {
         try {
             const db = this.client.db(dbName)
             const productsCollection = db.collection(collectionName)
-            // const queryFilter = { _id: new ObjectId(id), owner: owner }
             const queryFilter = { _id: new ObjectId(id), owner: owner, deleted: { $ne: true } }
             const productDocument = await productsCollection.findOne(queryFilter)
 
@@ -381,39 +377,19 @@ export class MdbClass {
         const collectionName = 'products'
 
         try {
-            // const filter = { _id: new ObjectId(id), owner: owner }
             const queryFilter = { _id: new ObjectId(id), owner: owner, deleted: { $ne: true } }
             const deleteData = { deleted: true }
             const updateField = { $set: { ...deleteData } }
+
             const result = await this.client.db(dbName)
                                             .collection(collectionName)
-                                            .updateOne(filter, updateField)
+                                            .updateOne(queryFilter, updateField)
 
-            if (result.matchedCount === 0) {
-                throw new Error(`Product not found or owner does not fit with the informed ID: ${id}`)
-            }
-            
-            // const filter = { _id: new ObjectId(id), owner: owner }
-            // const deleteData = { deleted: true }
-            // const updateField = { $set: { ...deleteData } }
-            // const result = await this.client.db(dbName)
-                                            // .collection(collectionName)
-                                            // .updateOne(filter, updateField)
-
-            // if (result.matchedCount === 0) {
-            //     throw new Error('Product not found or owner does not fit with the informed ID.')
-            // }
-            console.log('Matched count luego de eliminarse:', result.matchedCount)
-
-            const updatedProduct = await this.client.db(dbName)
-                                                    .collection(collectionName)
-                                                    .findOne(filter)
-
-            if (!updatedProduct) {
-                 throw new Error('We can\'t get the product after deleting.')
+            if (result.matchedCount === 0 && result.modifiedCount === 0) {
+                throw new Error(`Product not found or owner does not match with the informed ID. ${id}`)
             }
 
-            return { status: "Ok" }
+            return { status: "Ok", message: 'Deleted successfully.' }
         
         } catch (error) {
             return { status: 'Error', 
