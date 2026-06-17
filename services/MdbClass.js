@@ -381,7 +381,8 @@ export class MdbClass {
         const collectionName = 'products'
 
         try {
-            const filter = { _id: new ObjectId(id), owner: owner }
+            // const filter = { _id: new ObjectId(id), owner: owner }
+            const queryFilter = { _id: new ObjectId(id), owner: owner, deleted: { $ne: true } }
             const deleteData = { deleted: true }
             const updateField = { $set: { ...deleteData } }
             const result = await this.client.db(dbName)
@@ -389,8 +390,19 @@ export class MdbClass {
                                             .updateOne(filter, updateField)
 
             if (result.matchedCount === 0) {
-                throw new Error('Product not found or owner does not fit with the informed ID.')
+                throw new Error(`Product not found or owner does not fit with the informed ID: ${id}`)
             }
+            
+            // const filter = { _id: new ObjectId(id), owner: owner }
+            // const deleteData = { deleted: true }
+            // const updateField = { $set: { ...deleteData } }
+            // const result = await this.client.db(dbName)
+                                            // .collection(collectionName)
+                                            // .updateOne(filter, updateField)
+
+            // if (result.matchedCount === 0) {
+            //     throw new Error('Product not found or owner does not fit with the informed ID.')
+            // }
             console.log('Matched count luego de eliminarse:', result.matchedCount)
 
             const updatedProduct = await this.client.db(dbName)
