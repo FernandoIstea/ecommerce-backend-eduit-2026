@@ -43,6 +43,6 @@ app.listen(PORT, () => {
     console.log(`========================================================`)
     console.log(`🚀 Server running successfully!`)
     console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`)
-    console.log(`🔗 API Endpoints available on https://${location.hostname}:${PORT}`)
+    console.log(`🔗 API Endpoints available on https://${process.env.RENDER_EXTERNAL_URL || 'localhost'}:${PORT}`)
     console.log(`========================================================`)
 })
