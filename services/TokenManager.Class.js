@@ -31,29 +31,29 @@ class TokenManager {
             // Asegurar que la longitud sea múltiplo de 4 para atob()
             const padLength = (4 - (decodedToken.length % 4)) % 4;
             for (let i = 0; i < padLength; i++) {
-                decodedToken += '=';
+                decodedToken += '='
             }
 
             // 2. Decodificar repetidamente (el inverso de btoa)
-            let iteration = 0;
+            let iteration = 0
             while (iteration <= this.cycles) {
-                decodedToken = atob(decodedToken);
-                iteration++;
+                decodedToken = atob(decodedToken)
+                iteration++
             }
 
-            const [userEmail, userId, createdAt] = decodedToken.split('|');
+            const [userEmail, userId, createdAt] = decodedToken.split('|')
 
             return {
                 valid: true,
                 data: { userEmail, userId, createdAt }
-            };
+            }
 
         } catch (error) {
-            console.error("Error decoding token:", error);
+            console.error("Error decoding token:", error)
             return {
                 valid: false,
-                error: "Token inválido o corrupto"
-            };
+                error: "The current token is invalid or damaged."
+            }
         }
     }
 }

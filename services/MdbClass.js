@@ -503,6 +503,119 @@ export class MdbClass {
         }
     }
 
+    static async getMetrics(owner) {
+        if (!this.client) {
+            return { status: 'Error', errorMessage: 'Database client not initialized. Call MdbClass.connect() first.' }
+        }
+
+        const db = process.env.MONGO_DB_NAME
+
+        try {
+            // 1. Get count of active products by category for the owner
+            const activeProductsByCategoryCursor = await this.client.db(db)
+                                                                    .collection('vw_count_active_products_by_category')
+                                                                    .find({ owner: owner })
+            const results = await activeProductsByCategoryCursor.toArray()
+
+            const activeProductsByCategory = results.map((item)=> {
+                return {
+                    count: item.count,
+                    categoria: item.categoria
+                }
+            })
+
+            // 2. Get total count of active products for the owner
+            const totalActiveProductsCursor = await this.client.db(db)
+                                                               .collection('vw_total_active_products')
+                                                               .find({ owner: owner })
+            const apResult = await totalActiveProductsCursor.toArray()
+
+            const tap = apResult.map((item)=> {
+                return {
+                    activeProductCount: item.activeProductCount 
+                }
+            })
+
+            const totalActiveProducts = tap[0].activeProductCount
+
+            // 3. Get count of deleted products owned by the user (filtering by _id)
+            const deletedProductsCursor = await this.client.db(db)
+                                                           .collection('vw_count_deleted_products')
+                                                           .find({ _id: owner })
+            const dpResult = await deletedProductsCursor.toArray()
+
+            const dpc = dpResult.map((item)=> {
+                return {
+                    count: item.count
+                }
+            })
+
+            const deletedProductsCount = dpc[0].count
+
+            // 4. Get total count of categories (no filter specified)
+            const allCategoriesCursor = await this.client.db(db)
+                                                         .collection('vw_total_categories')
+                                                         .find({})
+            const tcResult = await allCategoriesCursor.toArray()
+
+            const tc = tcResult.map((category)=> {
+                return {
+                    totalCategories: category.totalCategories
+                }
+            })
+
+            const totalCategories = tc[0].totalCategories
+
+            console.table(totalCategories)
+
+            // 5. Get users with no products owned by the owner
+            const noProductsOwnedCursor = await await this.client.db(db)
+                                                                 .collection('vw_users_with_no_products_owned')
+                                                                 .find({})
+            const uwpnoResult = await noProductsOwnedCursor.toArray()
+            const usersWithNoProducts = uwpnoResult[0].count
+
+
+            // Compile all results into a single array structure
+            const metricsArray = [
+                { 
+                    metricName: 'Active Products By Category', 
+                    data: activeProductsByCategory,
+                    description: 'Count of active products grouped by category for the owner.'
+                },
+                { 
+                    metricName: 'Total Active Products', 
+                    totalActiveProducts: totalActiveProducts,
+                    description: 'Total count of active products owned by the user.'
+                },
+                { 
+                    metricName: 'Deleted Products Count', 
+                    deletedProductsCount: deletedProductsCount,
+                    description: 'Count of soft-deleted products owned by the user.'
+                },
+                { 
+                    metricName: 'Total Categories', 
+                    totalCategories: totalCategories,
+                    description: 'Total count of categories in the system.'
+                },
+                { 
+                    metricName: 'Users that not created products',
+                    usersCount: usersWithNoProducts,
+                    description: 'List of users that not created products.'
+                }
+            ]
+
+            return { status: 'Ok', dataMetrics: metricsArray }
+
+        } catch (error) {
+            console.error("❌ Error fetching metrics:", error)
+            return { 
+                status: 'Error', 
+                message: `Failed to retrieve one or more metrics: ${error.message}` 
+            }
+        }
+    }
+
     static async disconnect() {
         if (this.client) {
             await this.client.close()

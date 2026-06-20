@@ -16,6 +16,7 @@ import { updateProduct } from './controllers/updateproduct-controller.js'
 import { softDeleteProduct } from './controllers/softdeleteproduct-controller.js'
 import { filterProductsByName } from './controllers/filterproductsbyname-controller.js'
 import { filterProductsByCategory } from './controllers/filterproductsbycategory-controller.js'
+import { getMetrics } from './controllers/getMetrics-controller.js'
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -39,6 +40,8 @@ app.get(`/products/category/:categoryname`, filterProductsByCategory)
 app.post(`/products`, createProduct)
 app.put(`/products/:id`, updateProduct)
 app.delete(`/products/:id`, softDeleteProduct)
+
+app.post(`/get-metrics`, getMetrics)
 
 app.use((req, res) =>   res.status(404).json({ errorMessage: `Endpoint '${req.url}' no encontrado.` }) )
 
