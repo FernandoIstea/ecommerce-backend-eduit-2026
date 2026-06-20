@@ -15,7 +15,7 @@ import { createProduct } from './controllers/createproduct-controller.js'
 import { updateProduct } from './controllers/updateproduct-controller.js'
 import { softDeleteProduct } from './controllers/softdeleteproduct-controller.js'
 import { filterProductsByName } from './controllers/filterproductsbyname-controller.js'
-import { filterProductsByCategory } from './controllers/filterProductsByCategory-controller.js'
+import { filterProductsByCategory } from './controllers/filterproductsbycategory-controller.js'
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -35,7 +35,7 @@ app.post(`/categories`, createCategory)
 app.get(`/products`, getProducts)
 app.get(`/products/:id`, getProductById)
 app.get(`/products/name/:name`, filterProductsByName)
-app.get(`/products/category/:categoryname`, filterProductsByName)
+app.get(`/products/category/:categoryname`, filterProductsByCategory)
 app.post(`/products`, createProduct)
 app.put(`/products/:id`, updateProduct)
 app.delete(`/products/:id`, softDeleteProduct)

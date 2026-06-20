@@ -346,7 +346,7 @@ export class MdbClass {
         }
 
         if (!categoryName) {
-            throw new Error(`You must inform a valida category name to filter its products.`)
+            throw new Error(`You must inform a valid category name to filter its products.`)
         }
 
         const escapeRegExp = (string)=> string.replaceAll(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -357,8 +357,8 @@ export class MdbClass {
         try {
             const db = this.client.db(dbName)
             const productsCollection = db.collection(collectionName)
-            const regexPattern = new RegExp(escapeRegExp(name), 'i')
-            
+            const regexPattern = new RegExp(escapeRegExp(categoryName), 'i')
+
             const queryFilter = { categoria: regexPattern, owner: owner, deleted: { $ne: true } }
             const productDocuments = await productsCollection.find(queryFilter)
                                                              .toArray()

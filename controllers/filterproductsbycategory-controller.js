@@ -4,7 +4,7 @@ import { MdbClass } from '../services/MdbClass.js'
 
     /**
      * Retrieves a single product by its ID and verifies ownership.
-     * @param {string} name - The MongoDB Object ID of the product to retrieve.
+     * @param {string} categoryName - The Category name of the product(s) to retrieve.
      * @param {string} ownerId - The owner's ID from the API Key, used for authorization.
      * @returns {Promise<object>} An object containing the product data if found and owned by the user, or an error/null indicator.
      */
@@ -22,10 +22,10 @@ export const filterProductsByCategory = async (req, res) => {
 
     const categoryName = req.params.categoryname
 
-    if (!name) {
+    if (!categoryName) {
         return res.status(400)
                   .json({ success: false,
-                          message: 'You must inform part of a product name to filter.'
+                          message: 'You must inform a category name of a product to filter.'
                         })
     }
 
@@ -40,11 +40,11 @@ export const filterProductsByCategory = async (req, res) => {
         }
 
         await MdbClass.connect(process.env.MONGO_DB_CONNECTION)
-        const products = await MdbClass.filterProductsByName(categoryName.toLowerCase(), uid)
-        
+        const products = await MdbClass.filterProductsByCategory(categoryName, uid)
+
         if (products.status === 'Error') {
             status = 404
-            throw new Error(`We cannot find Products in the category: '${name}'`)
+            throw new Error(`We cannot find Products in the category: '${categoryName}'`)
         }
 
         return res.status(200).json({ success: true,

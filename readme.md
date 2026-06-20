@@ -224,7 +224,7 @@
 
 <hr>
 
-### 9. GET /products/category/:name
+### 9. GET /products/category/:categoryname
 
 **Descripción:** Filtra y recupera una lista de productos que estén incluídos en una categoría específica.
 
