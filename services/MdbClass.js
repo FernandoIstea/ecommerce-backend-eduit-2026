@@ -311,7 +311,7 @@ export class MdbClass {
             const productDocuments = await productsCollection.find(queryFilter)
                                                              .toArray()
 
-            if (productDocuments.length > 0) {
+            if (Array.isArray(productDocuments) && productDocuments.length > 0) {
                 const filteredProducts = productDocuments.map((prod)=> {
                     return {
                                id: prod._id.toString(),
@@ -328,6 +328,58 @@ export class MdbClass {
             } else {
                 return { status: 'Error', 
                         messageError: `We cannot find Products with name: '${name}'.`
+                    }
+            } 
+        } catch (error) {
+            return { 
+                status: 'Error',
+                message: `Database query failed: ${error.message}` 
+            }
+        }
+    }
+
+    static async filterProductsByCategory(categoryName, owner) {
+        if (!this.client) {
+            return { status: 'Error', 
+                     errorMessage: 'Database client not initialized. Call MdbClass.connect() first.' 
+                   }
+        }
+
+        if (!categoryName) {
+            throw new Error(`You must inform a valida category name to filter its products.`)
+        }
+
+        const escapeRegExp = (string)=> string.replaceAll(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+        const dbName = process.env.MONGO_DB_NAME
+        const collectionName = 'products'
+
+        try {
+            const db = this.client.db(dbName)
+            const productsCollection = db.collection(collectionName)
+            const regexPattern = new RegExp(escapeRegExp(name), 'i')
+            
+            const queryFilter = { categoria: regexPattern, owner: owner, deleted: { $ne: true } }
+            const productDocuments = await productsCollection.find(queryFilter)
+                                                             .toArray()
+
+            if (Array.isArray(productDocuments) && productDocuments.length > 0) {
+                const filteredProducts = productDocuments.map((prod)=> {
+                    return {
+                               id: prod._id.toString(),
+                               nombre: prod.nombre,
+                               imagen: prod.imagen,
+                               precio: prod.precio,
+                               categoria: prod.categoria
+                           }
+                })
+
+                return { status: 'Ok',
+                         data: filteredProducts
+                       }
+            } else {
+                return { status: 'Error', 
+                        messageError: `We cannot find Products in the category: '${name}'.`
                     }
             } 
         } catch (error) {

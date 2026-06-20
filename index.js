@@ -10,11 +10,12 @@ import { recoverProfile } from './controllers/recoverprofile-controller.js'
 import { getCategories } from './controllers/getcategories-controller.js'
 import { createCategory } from './controllers/createcategory-controller.js'
 import { getProducts } from './controllers/getproducts-controller.js'
+import { getProductById } from './controllers/getproductbyid-controller.js'
 import { createProduct } from './controllers/createproduct-controller.js'
 import { updateProduct } from './controllers/updateproduct-controller.js'
 import { softDeleteProduct } from './controllers/softdeleteproduct-controller.js'
-import { getProductById } from './controllers/getproductbyid-controller.js'
 import { filterProductsByName } from './controllers/filterproductsbyname-controller.js'
+import { filterProductsByCategory } from './controllers/filterProductsByCategory-controller.js'
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -34,6 +35,7 @@ app.post(`/categories`, createCategory)
 app.get(`/products`, getProducts)
 app.get(`/products/:id`, getProductById)
 app.get(`/products/name/:name`, filterProductsByName)
+app.get(`/products/category/:categoryname`, filterProductsByName)
 app.post(`/products`, createProduct)
 app.put(`/products/:id`, updateProduct)
 app.delete(`/products/:id`, softDeleteProduct)
