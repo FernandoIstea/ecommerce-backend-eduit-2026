@@ -522,7 +522,7 @@ export class MdbClass {
                     count: item.count,
                     categoria: item.categoria
                 }
-            })
+            }) || "N/A"
 
             // 2. Get total count of active products for the owner
             const totalActiveProductsCursor = await this.client.db(db)
@@ -532,9 +532,9 @@ export class MdbClass {
 
             const tap = apResult.map((item)=> {
                 return {
-                    activeProductCount: item.activeProductCount 
+                    activeProductCount: item.activeProductCount
                 }
-            })
+            }) || "N/A"
 
             const totalActiveProducts = tap[0].activeProductCount
 
@@ -550,7 +550,7 @@ export class MdbClass {
                 }
             })
 
-            const deletedProductsCount = dpc[0].count
+            const deletedProductsCount = dpc[0].count || "N/A"
 
             // 4. Get total count of categories (no filter specified)
             const allCategoriesCursor = await this.client.db(db)
@@ -564,7 +564,7 @@ export class MdbClass {
                 }
             })
 
-            const totalCategories = tc[0].totalCategories
+            const totalCategories = tc[0].totalCategories || "N/A"
 
             console.table(totalCategories)
 
