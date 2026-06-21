@@ -532,11 +532,11 @@ export class MdbClass {
 
             const tap = apResult.map((item)=> {
                 return {
-                    activeProductCount: item.activeProductCount
+                    activeProductsCount: item.activeProductCount
                 }
             }) || "N/A"
 
-            const totalActiveProducts = tap[0].activeProductCount
+            const totalActiveProducts = tap[0].activeProductsCount
 
             // 3. Get count of deleted products owned by the user (filtering by _id)
             const deletedProductsCursor = await this.client.db(db)
@@ -548,7 +548,7 @@ export class MdbClass {
                 return {
                     count: item.count
                 }
-            })
+            }) || "N/A"
 
             const deletedProductsCount = dpc[0].count || "N/A"
 
